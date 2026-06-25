@@ -60,22 +60,24 @@ public function index()
     // POST /api/v1/delays
     public function store(Request $request)
     {
-        $delay = Delay::create([
-            'schedule_code' => $request->schedule_code,
-            'reason' => $request->reason,
-            'delay_minutes' => $request->delay_minutes
-        ]);
+        $validated = $request->validated([
+            'schedule_code' => 'required|string',
+            'reason' => 'required|string',
+        'delay_minutes' => 'required|integer'
+    ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Delay created successfully',
-            'data' => $delay,
-            'meta' => [
-                'service_name' => 'Notification-Delay-Service',
-                'api_version' => 'v1'
-            ]
-        ], 201);
-    }
+    $delay = Delay::create($validated);
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Delay created successfully',
+        'data' => $delay,
+        'meta' => [
+            'service_name' => 'Notification-Delay-Service',
+            'api_version' => 'v1'
+        ]
+    ], 201);
+}
 
 
     public function sendNotification(Request $request)
