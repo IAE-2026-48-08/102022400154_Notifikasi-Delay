@@ -20,18 +20,18 @@ class DelayController extends Controller
         )
     ]
 )]
-public function index()
-{
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Delay list retrieved successfully',
-        'data' => Delay::all(),
-        'meta' => [
-            'service_name' => 'Notification-Delay-Service',
-            'api_version' => 'v1'
-        ]
-    ]);
-}
+    public function index()
+    {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Delay list retrieved successfully',
+            'data' => Delay::all(),
+            'meta' => [
+                'service_name' => 'Notification-Delay-Service',
+                'api_version' => 'v1'
+            ]
+        ]);
+    }
 
     // GET /api/v1/delays/{id}
     public function show($id)
@@ -60,25 +60,24 @@ public function index()
     // POST /api/v1/delays
     public function store(Request $request)
     {
-        $validated = $request->validated([
+        $validated = $request->validate([
             'schedule_code' => 'required|string',
             'reason' => 'required|string',
-        'delay_minutes' => 'required|integer'
-    ]);
+            'delay_minutes' => 'required|integer'
+        ]);
 
-    $delay = Delay::create($validated);
+        $delay = Delay::create($validated);
 
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Delay created successfully',
-        'data' => $delay,
-        'meta' => [
-            'service_name' => 'Notification-Delay-Service',
-            'api_version' => 'v1'
-        ]
-    ], 201);
-}
-
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Delay created successfully',
+            'data' => $delay,
+            'meta' => [
+                'service_name' => 'Notification-Delay-Service',
+                'api_version' => 'v1'
+            ]
+        ], 201);
+    }
 
     public function sendNotification(Request $request)
     {
@@ -86,13 +85,13 @@ public function index()
             'status' => 'success',
             'message' => 'Delay notification sent successfully',
             'data' => [
-            'schedule_code' => $request->schedule_code,
-            'notification' => 'Your trip has been delayed'
-        ],
+                'schedule_code' => $request->schedule_code,
+                'notification' => 'Your trip has been delayed'
+            ],
             'meta' => [
-            'service_name' => 'Notification-Delay-Service',
-            'api_version' => 'v1'
-        ]
-    ]);
+                'service_name' => 'Notification-Delay-Service',
+                'api_version' => 'v1'
+            ]
+        ]);
     }
 }
