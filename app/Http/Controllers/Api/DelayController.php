@@ -5,21 +5,19 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Delay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use OpenApi\Attributes as OA;
 
 class DelayController extends Controller
 {
     #[OA\Get(
-    path: '/api/v1/delays',
-    summary: 'Get all delays',
-    tags: ['Delays'],
-    responses: [
-        new OA\Response(
-            response: 200,
-            description: 'Success'
-        )
-    ]
-)]
+        path: '/api/v1/delays',
+        summary: 'Get all delays',
+        tags: ['Delays'],
+        responses: [
+            new OA\Response(response: 200, description: 'Success')
+        ]
+    )]
     public function index()
     {
         return response()->json([
@@ -33,7 +31,18 @@ class DelayController extends Controller
         ]);
     }
 
-    // GET /api/v1/delays/{id}
+    #[OA\Get(
+        path: '/api/v1/delays/{id}',
+        summary: 'Get delay by ID',
+        tags: ['Delays'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Success'),
+            new OA\Response(response: 404, description: 'Not Found')
+        ]
+    )]
     public function show($id)
     {
         $delay = Delay::find($id);
@@ -57,16 +66,43 @@ class DelayController extends Controller
         ]);
     }
 
-    // POST /api/v1/delays
+    #[OA\Post(
+        path: '/api/v1/delays',
+        summary: 'Create a new delay',
+        tags: ['Delays'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['schedule_code', 'reason', 'delay_minutes'],
+                properties: [
+                    new OA\Property(property: 'schedule_code', type: 'string'),
+                    new OA\Property(property: 'reason', type: 'string'),
+                    new OA\Property(property: 'delay_minutes', type: 'integer')
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Created'),
+            new OA\Response(response: 422, description: 'Validation Error')
+        ]
+    )]
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'schedule_code' => 'required|string',
             'reason' => 'required|string',
             'delay_minutes' => 'required|integer'
         ]);
 
-        $delay = Delay::create($validated);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $delay = Delay::create($validator->validated());
 
         return response()->json([
             'status' => 'success',
@@ -79,6 +115,22 @@ class DelayController extends Controller
         ], 201);
     }
 
+    #[OA\Post(
+        path: '/api/v1/delays/notifications',
+        summary: 'Send delay notification',
+        tags: ['Delays'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'schedule_code', type: 'string')
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Success')
+        ]
+    )]
     public function sendNotification(Request $request)
     {
         return response()->json([

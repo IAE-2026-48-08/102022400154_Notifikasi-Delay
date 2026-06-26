@@ -10,7 +10,7 @@ use OpenApi\Attributes as OA;
     description: "API untuk Service Notifikasi Delay"
 )]
 #[OA\Server(
-    url: "http://127.0.0.1:8000",
+    url: "http://localhost:8001",
     description: "Local Server"
 )]
 class OpenApi
