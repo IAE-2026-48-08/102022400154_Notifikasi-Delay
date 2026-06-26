@@ -124,6 +124,15 @@
             }
         }
     },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "name": "X-IAE-KEY",
+                "in": "header"
+            }
+        }
+    },
     "tags": [
         {
             "name": "Delays",

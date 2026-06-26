@@ -14,6 +14,7 @@ class DelayController extends Controller
         path: '/api/v1/delays',
         summary: 'Get all delays',
         tags: ['Delays'],
+        security: [['ApiKeyAuth' => []]],
         responses: [
             new OA\Response(response: 200, description: 'Success')
         ]
@@ -35,6 +36,7 @@ class DelayController extends Controller
         path: '/api/v1/delays/{id}',
         summary: 'Get delay by ID',
         tags: ['Delays'],
+        security: [['ApiKeyAuth' => []]],
         parameters: [
             new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
         ],
@@ -70,14 +72,15 @@ class DelayController extends Controller
         path: '/api/v1/delays',
         summary: 'Create a new delay',
         tags: ['Delays'],
+        security: [['ApiKeyAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 required: ['schedule_code', 'reason', 'delay_minutes'],
                 properties: [
-                    new OA\Property(property: 'schedule_code', type: 'string'),
-                    new OA\Property(property: 'reason', type: 'string'),
-                    new OA\Property(property: 'delay_minutes', type: 'integer')
+                    new OA\Property(property: 'schedule_code', type: 'string', example: 'SCH001'),
+                    new OA\Property(property: 'reason', type: 'string', example: 'Traffic jam'),
+                    new OA\Property(property: 'delay_minutes', type: 'integer', example: 30)
                 ]
             )
         ),
@@ -119,11 +122,12 @@ class DelayController extends Controller
         path: '/api/v1/delays/notifications',
         summary: 'Send delay notification',
         tags: ['Delays'],
+        security: [['ApiKeyAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: 'schedule_code', type: 'string')
+                    new OA\Property(property: 'schedule_code', type: 'string', example: 'SCH001')
                 ]
             )
         ),
