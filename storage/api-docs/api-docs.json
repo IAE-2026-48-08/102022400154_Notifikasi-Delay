@@ -24,6 +24,103 @@
                         "description": "Success"
                     }
                 }
+            },
+            "post": {
+                "tags": [
+                    "Delays"
+                ],
+                "summary": "Create a new delay",
+                "operationId": "4bc9467808df1e1ddb401e971dfebd90",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "schedule_code",
+                                    "reason",
+                                    "delay_minutes"
+                                ],
+                                "properties": {
+                                    "schedule_code": {
+                                        "type": "string"
+                                    },
+                                    "reason": {
+                                        "type": "string"
+                                    },
+                                    "delay_minutes": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/delays/{id}": {
+            "get": {
+                "tags": [
+                    "Delays"
+                ],
+                "summary": "Get delay by ID",
+                "operationId": "c9b131865104a2ef806d0572b702d853",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/delays/notifications": {
+            "post": {
+                "tags": [
+                    "Delays"
+                ],
+                "summary": "Send delay notification",
+                "operationId": "9156fdf9106ad598e31c3a593c7b4adc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "schedule_code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
             }
         }
     },

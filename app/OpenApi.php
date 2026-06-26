@@ -13,6 +13,12 @@ use OpenApi\Attributes as OA;
     url: "http://localhost:8001",
     description: "Local Server"
 )]
+#[OA\SecurityScheme(
+    securityScheme: "ApiKeyAuth",
+    type: "apiKey",
+    in: "header",
+    name: "X-IAE-KEY"
+)]
 class OpenApi
 {
 }
